@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    #canvas {
+      background: lightblue;
+    }
+  </style>
+</head>
+<body>
+  <!-- canvas默认是inline-block -->
+  <canvas id="canvas" width=300 height=300></canvas> 
+  <script>
+    var canvas = document.getElementById('canvas')
+    var ctx = canvas.getContext('2d')
+    // ctx.fillStyle = 'lightgreen';
+    // ctx.fillRect(0, 0, 150, 100);
+    var painting = false
+    var lastPoint = {x: undefined, y: undefined}
+    canvas.onmousedown = function (e) {
+      painting = true
+      var x = e.clientX
+      var y = e.clientY
+      lastPoint = {x, y}
+      console.log(lastPoint) // 第一个点
+      drawCircle(x, y, 1)
+    }
+    canvas.onmousemove = function (e) {
+      if (painting) {
+        var x = e.clientX
+        var y = e.clientY
+        var newPoint = {x, y} // 新的点，把它和旧(上一个)的点连起来
+        drawCircle(x, y, 1)
+        drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y)
+        lastPoint = newPoint
+      }
+    }
+    canvas.onmouseup = function () {
+      painting = false
+    }
+    function drawCircle(x,y,raduis) {
+      ctx.beginPath()
+      ctx.arc(x, y, raduis, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    function drawLine(x1, y1, x2, y2) {
+      ctx.beginPath()
+      ctx.moveTo(x1, y1) // 起点
+      ctx.lineWidth = 5
+      ctx.lineTo(x2, y2) // 终点
+      ctx.stroke()
+      ctx.closePath()
+    }
+  </script>
+</body>
+</html> 
